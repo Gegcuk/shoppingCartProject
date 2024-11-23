@@ -1,11 +1,12 @@
 package uk.gegc.shoppingcart.service.product;
 
 import uk.gegc.shoppingcart.model.Product;
+import uk.gegc.shoppingcart.request.AddProductRequest;
 
 import java.util.List;
 
 public interface IProductService {
-    Product addProduct(Product product);
+    Product addProduct(AddProductRequest request);
     Product getProductById(Long id);
     void deleteProductById(Long id);
     void updateProduct(Product product, Long productId);
