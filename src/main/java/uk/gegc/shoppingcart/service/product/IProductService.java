@@ -2,7 +2,7 @@ package uk.gegc.shoppingcart.service.product;
 
 import uk.gegc.shoppingcart.model.Product;
 import uk.gegc.shoppingcart.request.AddProductRequest;
-import uk.gegc.shoppingcart.request.ProductUpdateRequest;
+import uk.gegc.shoppingcart.request.UpdateProductRequest;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ public interface IProductService {
     Product addProduct(AddProductRequest request);
     Product getProductById(Long id);
     void deleteProductById(Long id);
-    Product updateProduct(ProductUpdateRequest product, Long productId);
+    Product updateProduct(UpdateProductRequest product, Long productId);
     List<Product> getAllProducts();
     List<Product> getProductsByCategory(String category);
     List<Product> getProductsByBrand(String brand);

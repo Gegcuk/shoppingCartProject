@@ -8,7 +8,7 @@ import uk.gegc.shoppingcart.model.Product;
 import uk.gegc.shoppingcart.repository.CategoryRepository;
 import uk.gegc.shoppingcart.repository.ProductRepository;
 import uk.gegc.shoppingcart.request.AddProductRequest;
-import uk.gegc.shoppingcart.request.ProductUpdateRequest;
+import uk.gegc.shoppingcart.request.UpdateProductRequest;
 
 import java.util.List;
 import java.util.Optional;
@@ -51,14 +51,14 @@ public class ProductService implements IProductService{
     }
 
     @Override
-    public Product updateProduct(ProductUpdateRequest product, Long productId) {
+    public Product updateProduct(UpdateProductRequest product, Long productId) {
         return productRepository.findById(productId)
                 .map(existingProduct -> updateExistingProduct(existingProduct, product))
                 .map(productRepository::save)
                 .orElseThrow(() -> new ProductNotFoundException("Product not found!"));
     }
 
-    private Product updateExistingProduct(Product existingProduct, ProductUpdateRequest productUpdateRequest){
+    private Product updateExistingProduct(Product existingProduct, UpdateProductRequest productUpdateRequest){
         existingProduct.setName(productUpdateRequest.getName());
         existingProduct.setBrand(productUpdateRequest.getBrand());
         existingProduct.setPrice(productUpdateRequest.getPrice());

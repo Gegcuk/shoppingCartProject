@@ -6,7 +6,7 @@ import uk.gegc.shoppingcart.model.Category;
 import java.math.BigDecimal;
 
 @Data
-public class ProductUpdateRequest {
+public class UpdateProductRequest {
     private Long id;
     private String name;
     private String brand;
