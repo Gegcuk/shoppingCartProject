@@ -2,7 +2,7 @@ package uk.gegc.shoppingcart.service.product;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import uk.gegc.shoppingcart.exception.ProductNotFoundException;
+import uk.gegc.shoppingcart.exception.ResourceNotFoundException;
 import uk.gegc.shoppingcart.model.Category;
 import uk.gegc.shoppingcart.model.Product;
 import uk.gegc.shoppingcart.repository.CategoryRepository;
@@ -10,6 +10,7 @@ import uk.gegc.shoppingcart.repository.ProductRepository;
 import uk.gegc.shoppingcart.request.AddProductRequest;
 import uk.gegc.shoppingcart.request.UpdateProductRequest;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,12 +43,12 @@ public class ProductService implements IProductService{
 
     @Override
     public Product getProductById(Long id) {
-        return productRepository.findById(id).orElseThrow(() ->  new ProductNotFoundException("Product not found"));
+        return productRepository.findById(id).orElseThrow(() ->  new ResourceNotFoundException("Product not found"));
     }
 
     @Override
     public void deleteProductById(Long id) {
-        productRepository.findById(id).ifPresentOrElse(productRepository::delete, ()-> {throw new ProductNotFoundException("Product not found!");});
+        productRepository.findById(id).ifPresentOrElse(productRepository::delete, ()-> {throw new ResourceNotFoundException("Product not found!");});
     }
 
     @Override
@@ -55,7 +56,7 @@ public class ProductService implements IProductService{
         return productRepository.findById(productId)
                 .map(existingProduct -> updateExistingProduct(existingProduct, product))
                 .map(productRepository::save)
-                .orElseThrow(() -> new ProductNotFoundException("Product not found!"));
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found!"));
     }
 
     private Product updateExistingProduct(Product existingProduct, UpdateProductRequest productUpdateRequest){
@@ -97,7 +98,9 @@ public class ProductService implements IProductService{
 
     @Override
     public List<Product> getProductsByBrandAndName(String brand, String name) {
-        return productRepository.findByBrandAndName(brand, name);
+        List<Product> products = productRepository.findByBrandAndName(brand, name);
+        if(products.isEmpty()) throw new ResourceNotFoundException("Products not found");
+        else return products;
     }
 
     @Override

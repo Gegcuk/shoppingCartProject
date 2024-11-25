@@ -24,7 +24,7 @@ import java.util.List;
 public class ImageController {
     private final IImageService imageService;
 
-    @PostMapping("/upload")
+    @PostMapping
     public ResponseEntity<APIResponse> saveImages(@RequestParam List<MultipartFile> files, @RequestParam Long productId){
         try {
             List<ImageDTO> imageDTOs = imageService.saveImages(files, productId);
@@ -34,7 +34,7 @@ public class ImageController {
         }
     }
 
-    @GetMapping("/image/download/{imageId}")
+    @GetMapping("/{imageId}")
     public ResponseEntity<Resource> downloadImage(@PathVariable(name = "imageId") Long id) throws SQLException {
         Image image = imageService.getImageById(id);
         ByteArrayResource resource = new ByteArrayResource(image.getImage().getBytes(1, (int) image.getImage().length()));
@@ -43,7 +43,7 @@ public class ImageController {
                 .body(resource);
     }
 
-    @PutMapping("/image/{imageId}/update")
+    @PutMapping("/{imageId}")
     public ResponseEntity<APIResponse> updateImage(@PathVariable (name = "imageId") Long imageId, @RequestBody MultipartFile file){
         try {
             Image image = imageService.getImageById(imageId);
@@ -57,7 +57,7 @@ public class ImageController {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new APIResponse("Update failed.", HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
-    @DeleteMapping("/image/{imageId}/delete")
+    @DeleteMapping("/{imageId}")
     public ResponseEntity<APIResponse> deleteImage(@PathVariable (name = "imageId") Long imageId){
         try {
             Image image = imageService.getImageById(imageId);
