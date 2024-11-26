@@ -13,7 +13,6 @@ import java.sql.Blob;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "images")
 public class Image {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,5 +27,4 @@ public class Image {
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
-
 }

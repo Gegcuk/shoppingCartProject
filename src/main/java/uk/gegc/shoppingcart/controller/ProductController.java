@@ -132,7 +132,7 @@ public class ProductController {
     public ResponseEntity<APIResponse> getProductByCategoryAndBrand(@RequestParam(name = "category", required = false) String category,
                                                                    @RequestParam(name = "brand", required = false) String brand){
         try {
-            List<Product> productList = productService.getProductsByCategoryAndName(category, brand);
+            List<Product> productList = productService.getProductsByCategoryAndBrand(category, brand);
             return ResponseEntity.ok(new APIResponse("Success", productList));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new APIResponse(e.getMessage(), null));

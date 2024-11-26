@@ -78,7 +78,7 @@ public class ProductService implements IProductService{
 
     @Override
     public List<Product> getProductsByCategory(String category) {
-        List<Product> products = productRepository.findByBrand(category);
+        List<Product> products = productRepository.findByCategoryName(category);
         if(products.isEmpty()) throw new ResourceNotFoundException("Products not found");
         else return products;
     }
@@ -92,7 +92,7 @@ public class ProductService implements IProductService{
 
     @Override
     public List<Product> getProductsByCategoryAndBrand(String category, String brand) {
-        List<Product> products = productRepository.findByCategoryNameAndName(category, brand);
+        List<Product> products = productRepository.findByCategoryNameAndBrand(category, brand);
         if(products.isEmpty()) throw new ResourceNotFoundException("Products not found");
         else return products;
     }
