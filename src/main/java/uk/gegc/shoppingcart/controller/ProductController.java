@@ -66,15 +66,89 @@ public class ProductController {
         }
     }
 
+    @GetMapping("/filter/name")
+    public ResponseEntity<APIResponse> getProductsByName(@RequestParam(name = "name") String name){
+        try {
+            List<Product> productList = productService.getProductsByName(name);
+            return ResponseEntity.ok(new APIResponse("Success", productList));
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new APIResponse(e.getMessage(), null));
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new APIResponse(e.getMessage(), null));
+        }
+    }
 
-    @GetMapping("/filter")
-    public ResponseEntity<APIResponse> getProductByBrandAndName(@RequestParam(name = "brand", required = false) String brand,
-                                                                @RequestParam(name = "name", required = false) String name){
+    @GetMapping("/filter/brand")
+    public ResponseEntity<APIResponse> getProductByBrand(@RequestParam(name = "brand") String brand){
+        try {
+            List<Product> productList = productService.getProductsByBrand(brand);
+            return ResponseEntity.ok(new APIResponse("Success", productList));
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new APIResponse(e.getMessage(), null));
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new APIResponse(e.getMessage(), null));
+        }
+    }
+
+    @GetMapping("/filter/category")
+    public ResponseEntity<APIResponse> getProductByCategory(@RequestParam(name = "category") String category){
+        try {
+            List<Product> productList = productService.getProductsByCategory(category);
+            return ResponseEntity.ok(new APIResponse("Success", productList));
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new APIResponse(e.getMessage(), null));
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new APIResponse(e.getMessage(), null));
+        }
+    }
+
+    @GetMapping("/filter/brand-and-name")
+    public ResponseEntity<APIResponse> getProductByBrandAndName(@RequestParam(name = "brand") String brand,
+                                                                @RequestParam(name = "name") String name){
         try {
             List<Product> productList = productService.getProductsByBrandAndName(brand, name);
             return ResponseEntity.ok(new APIResponse("Success", productList));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new APIResponse(e.getMessage(), null));
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new APIResponse(e.getMessage(), null));
         }
     }
+
+    @GetMapping("/filter/category-and-name")
+    public ResponseEntity<APIResponse> getProductByCategoryAndName(@RequestParam(name = "category", required = false) String category,
+                                                                @RequestParam(name = "name", required = false) String name){
+        try {
+            List<Product> productList = productService.getProductsByCategoryAndName(category, name);
+            return ResponseEntity.ok(new APIResponse("Success", productList));
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new APIResponse(e.getMessage(), null));
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new APIResponse(e.getMessage(), null));
+        }
+    }
+
+    @GetMapping("/filter/category-and-brand")
+    public ResponseEntity<APIResponse> getProductByCategoryAndBrand(@RequestParam(name = "category", required = false) String category,
+                                                                   @RequestParam(name = "brand", required = false) String brand){
+        try {
+            List<Product> productList = productService.getProductsByCategoryAndName(category, brand);
+            return ResponseEntity.ok(new APIResponse("Success", productList));
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new APIResponse(e.getMessage(), null));
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new APIResponse(e.getMessage(), null));
+        }
+    }
+
+    public ResponseEntity<APIResponse> countProductsByBrandAndName(@RequestParam String brand, @RequestParam String name){
+        try{
+            var productCount = productService.countProductsByBrandAndName(brand, name);
+            return ResponseEntity.ok(new APIResponse("Product count!", productCount));
+        } catch (Exception e){
+            return ResponseEntity.ok(new APIResponse(e.getMessage(), null));
+        }
+    }
+
+
 }
