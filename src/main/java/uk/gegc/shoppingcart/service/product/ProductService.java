@@ -1,16 +1,20 @@
 package uk.gegc.shoppingcart.service.product;
 
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import uk.gegc.shoppingcart.dto.ImageDTO;
+import uk.gegc.shoppingcart.dto.ProductDTO;
 import uk.gegc.shoppingcart.exception.ResourceNotFoundException;
 import uk.gegc.shoppingcart.model.Category;
+import uk.gegc.shoppingcart.model.Image;
 import uk.gegc.shoppingcart.model.Product;
 import uk.gegc.shoppingcart.repository.CategoryRepository;
+import uk.gegc.shoppingcart.repository.ImageRepository;
 import uk.gegc.shoppingcart.repository.ProductRepository;
 import uk.gegc.shoppingcart.request.AddProductRequest;
 import uk.gegc.shoppingcart.request.UpdateProductRequest;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,6 +23,8 @@ import java.util.Optional;
 public class ProductService implements IProductService{
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+    private final ModelMapper modelMapper;
+    private final ImageRepository imageRepository;
 
     @Override
     public Product addProduct(AddProductRequest request) {
@@ -121,5 +127,21 @@ public class ProductService implements IProductService{
     @Override
     public Long countProductsByBrandAndName(String brand, String name) {
         return productRepository.countByBrandAndName(brand, name);
+    }
+
+    @Override
+    public List<ProductDTO> getConvertedProductDTOs(List<Product> products){
+        return products.stream().map(this::convertToDTO).toList();
+    }
+
+    @Override
+    public ProductDTO convertToDTO(Product product){
+        ProductDTO productDTO = modelMapper.map(product, ProductDTO.class);
+        List<Image> images = imageRepository.findByProductId(product.getId());
+        List<ImageDTO> imageDTOList = images.stream()
+                .map(image -> modelMapper.map(image, ImageDTO.class))
+                .toList();
+        productDTO.setImages(imageDTOList);
+        return productDTO;
     }
 }

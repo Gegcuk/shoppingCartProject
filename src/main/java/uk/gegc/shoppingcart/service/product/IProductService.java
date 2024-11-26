@@ -1,5 +1,6 @@
 package uk.gegc.shoppingcart.service.product;
 
+import uk.gegc.shoppingcart.dto.ProductDTO;
 import uk.gegc.shoppingcart.model.Product;
 import uk.gegc.shoppingcart.request.AddProductRequest;
 import uk.gegc.shoppingcart.request.UpdateProductRequest;
@@ -20,4 +21,7 @@ public interface IProductService {
     List<Product> getProductsByCategoryAndName(String category, String name);
     Long countProductsByBrandAndName(String brand, String name);
 
+    List<ProductDTO> getConvertedProductDTOs(List<Product> products);
+
+    ProductDTO convertToDTO(Product product);
 }

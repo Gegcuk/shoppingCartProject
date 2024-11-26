@@ -5,6 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.service.annotation.GetExchange;
+import uk.gegc.shoppingcart.dto.ProductDTO;
 import uk.gegc.shoppingcart.exception.ResourceNotFoundException;
 import uk.gegc.shoppingcart.model.Product;
 import uk.gegc.shoppingcart.request.AddProductRequest;
@@ -23,14 +25,16 @@ public class ProductController {
     @GetMapping("")
     public ResponseEntity<APIResponse> getAllProducts(){
         List<Product> products = productService.getAllProducts();
-        return ResponseEntity.ok(new APIResponse("success", products));
+        List<ProductDTO> productDTOList = productService.getConvertedProductDTOs(products);
+        return ResponseEntity.ok(new APIResponse("success", productDTOList));
     }
 
     @GetMapping("/{productId}")
     public ResponseEntity<APIResponse> getProductById(@PathVariable Long productId){
         try {
             Product product = productService.getProductById(productId);
-            return ResponseEntity.ok(new APIResponse("Success", product));
+            ProductDTO productDTO = productService.convertToDTO(product);
+            return ResponseEntity.ok(new APIResponse("Success", productDTO));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new APIResponse(e.getMessage(), null));
         }
@@ -70,7 +74,9 @@ public class ProductController {
     public ResponseEntity<APIResponse> getProductsByName(@RequestParam(name = "name") String name){
         try {
             List<Product> productList = productService.getProductsByName(name);
-            return ResponseEntity.ok(new APIResponse("Success", productList));
+            List<ProductDTO> productDTOList = productService.getConvertedProductDTOs(productList);
+
+            return ResponseEntity.ok(new APIResponse("Success", productDTOList));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new APIResponse(e.getMessage(), null));
         } catch (Exception e){
@@ -82,7 +88,9 @@ public class ProductController {
     public ResponseEntity<APIResponse> getProductByBrand(@RequestParam(name = "brand") String brand){
         try {
             List<Product> productList = productService.getProductsByBrand(brand);
-            return ResponseEntity.ok(new APIResponse("Success", productList));
+            List<ProductDTO> productDTOList = productService.getConvertedProductDTOs(productList);
+
+            return ResponseEntity.ok(new APIResponse("Success", productDTOList));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new APIResponse(e.getMessage(), null));
         } catch (Exception e){
@@ -94,7 +102,9 @@ public class ProductController {
     public ResponseEntity<APIResponse> getProductByCategory(@RequestParam(name = "category") String category){
         try {
             List<Product> productList = productService.getProductsByCategory(category);
-            return ResponseEntity.ok(new APIResponse("Success", productList));
+            List<ProductDTO> productDTOList = productService.getConvertedProductDTOs(productList);
+
+            return ResponseEntity.ok(new APIResponse("Success", productDTOList));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new APIResponse(e.getMessage(), null));
         } catch (Exception e){
@@ -107,7 +117,9 @@ public class ProductController {
                                                                 @RequestParam(name = "name") String name){
         try {
             List<Product> productList = productService.getProductsByBrandAndName(brand, name);
-            return ResponseEntity.ok(new APIResponse("Success", productList));
+            List<ProductDTO> productDTOList = productService.getConvertedProductDTOs(productList);
+
+            return ResponseEntity.ok(new APIResponse("Success", productDTOList));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new APIResponse(e.getMessage(), null));
         } catch (Exception e){
@@ -120,7 +132,9 @@ public class ProductController {
                                                                 @RequestParam(name = "name", required = false) String name){
         try {
             List<Product> productList = productService.getProductsByCategoryAndName(category, name);
-            return ResponseEntity.ok(new APIResponse("Success", productList));
+            List<ProductDTO> productDTOList = productService.getConvertedProductDTOs(productList);
+
+            return ResponseEntity.ok(new APIResponse("Success", productDTOList));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new APIResponse(e.getMessage(), null));
         } catch (Exception e){
@@ -133,7 +147,9 @@ public class ProductController {
                                                                    @RequestParam(name = "brand", required = false) String brand){
         try {
             List<Product> productList = productService.getProductsByCategoryAndBrand(category, brand);
-            return ResponseEntity.ok(new APIResponse("Success", productList));
+            List<ProductDTO> productDTOList = productService.getConvertedProductDTOs(productList);
+
+            return ResponseEntity.ok(new APIResponse("Success", productDTOList));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new APIResponse(e.getMessage(), null));
         } catch (Exception e){
@@ -141,6 +157,7 @@ public class ProductController {
         }
     }
 
+    @GetExchange("/count/brand-and-name")
     public ResponseEntity<APIResponse> countProductsByBrandAndName(@RequestParam String brand, @RequestParam String name){
         try{
             var productCount = productService.countProductsByBrandAndName(brand, name);
