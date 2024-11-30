@@ -7,18 +7,24 @@ import org.springframework.web.bind.annotation.*;
 import uk.gegc.shoppingcart.response.APIResponse;
 import uk.gegc.shoppingcart.service.cart.CartItemService;
 import uk.gegc.shoppingcart.service.cart.ICartItemService;
+import uk.gegc.shoppingcart.service.cart.ICartService;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("${api.prfix}/cartitems")
+@RequestMapping("${api.prefix}/cartitems")
 public class CartItemController {
     private final ICartItemService cartItemService;
+    private final ICartService cartService;
 
     @PostMapping("/item")
     public ResponseEntity<APIResponse> addItemToCart(@RequestParam Long cartId,
                                                      @RequestParam Long productId,
                                                      @RequestParam Integer quantity){
         try {
+            if(cartId == null){
+                cartId = cartService.initializeNewCat();
+            }
+
             cartItemService.addItemToCart(cartId, productId, quantity);
             return ResponseEntity.ok(new APIResponse("Item added", null));
         } catch (Exception e) {
