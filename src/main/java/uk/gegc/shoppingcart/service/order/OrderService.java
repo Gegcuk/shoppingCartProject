@@ -1,7 +1,9 @@
 package uk.gegc.shoppingcart.service.order;
 
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import uk.gegc.shoppingcart.dto.OrderDTO;
 import uk.gegc.shoppingcart.enums.OrderStatus;
 import uk.gegc.shoppingcart.exception.ResourceNotFoundException;
 import uk.gegc.shoppingcart.model.Cart;
@@ -23,6 +25,7 @@ public class OrderService implements IOrderService{
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
     private final CartService cartService;
+    private final ModelMapper modelMapper;
 
 
     @Override
@@ -68,12 +71,22 @@ public class OrderService implements IOrderService{
     }
 
     @Override
-    public Order getOrder(Long orderId) {
-        return orderRepository.findById(orderId).orElseThrow(() -> new ResourceNotFoundException("Order not found"));
+    public OrderDTO getOrder(Long orderId) {
+        return orderRepository.findById(orderId)
+                .map(this::convertToDTO)
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
     }
 
     @Override
-    public List<Order> getUserOrders(Long userId){
-        return orderRepository.findByUserId(userId);
+    public List<OrderDTO> getUserOrders(Long userId){
+
+        return  orderRepository.findByUserId(userId)
+                .stream()
+                .map(this::convertToDTO)
+                .toList();
+    }
+
+    private OrderDTO convertToDTO(Order order){
+        return modelMapper.map(order, OrderDTO.class);
     }
 }

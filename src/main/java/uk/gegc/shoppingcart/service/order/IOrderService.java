@@ -1,12 +1,13 @@
 package uk.gegc.shoppingcart.service.order;
 
+import uk.gegc.shoppingcart.dto.OrderDTO;
 import uk.gegc.shoppingcart.model.Order;
 
 import java.util.List;
 
 public interface IOrderService {
     Order placeOrder(Long userId);
-    Order getOrder(Long orderId);
+    OrderDTO getOrder(Long orderId);
 
-    List<Order> getUserOrders(Long userId);
+    List<OrderDTO> getUserOrders(Long userId);
 }
