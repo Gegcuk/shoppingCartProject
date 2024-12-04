@@ -6,4 +6,5 @@ import uk.gegc.shoppingcart.model.Cart;
 
 @Repository
 public interface CartRepository extends JpaRepository<Cart, Long> {
+    Cart findByUserId(Long userId);
 }
